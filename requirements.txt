@@ -1,0 +1,17 @@
+
+# Python 3.10+ recommended
+
+faster-whisper==1.2.1
+moviepy==2.1.1
+opencv-python==4.10.0.84
+flask==3.1.0
+pillow==10.4.0                    
+numpy==2.2.0
+pysrt==1.1.2
+tqdm==4.67.1
+ffmpeg-python==0.2.0
+yt-dlp==2025.5.22
+
+
+librosa==0.10.2.post1
+sentence-transformers==3.4.1
