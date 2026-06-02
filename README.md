@@ -1,92 +1,69 @@
-#  AutoShorts AI
+#  AutoShorts AI — Local Video to Shorts Generator
 
-**AutoShorts AI** is a fully local, CPU-based video processing system that automatically converts long videos into short viral clips (9:16) with smart captions, zoom effects, and engaging visuals. No paid APIs, no cloud services — everything runs offline on your machine.
-
----
-
-## 🚀 Project Goal
-
-Transform long-form videos into multiple ready-to-post vertical shorts for YouTube Shorts, TikTok, Instagram Reels, etc., using intelligent clip selection and cinematic effects.
+**AutoShorts AI** is a self-hosted, 100% free, CPU-compatible tool that automatically transforms long-form videos into engaging vertical shorts (9:16) with burned-in animated captions. Everything runs locally on your machine — no cloud costs, no subscriptions, and no API keys required.
 
 ---
 
-## 🧠 System Pipeline
+## Features
 
-1. **Transcription** — Convert speech to timestamped text using Faster-Whisper
-2. **Scoring** — Analyze content to find the most engaging moments
-3. **Clip Selection** — Choose the best segments based on scores
-4. **Rendering** — Cut and convert clips into vertical (9:16) format
-5. **Effects** — Apply zoom, transitions, and overlays
-6. **Captions** — Generate beautiful subtitles and word-level highlights
-7. **Export** — Save final shorts in `shorts_output/`
-
----
-
-## 🧩 Modules
-
-- `pipeline/transcriber.py` — Audio transcription
-- `pipeline/scorer.py` — Clip importance scoring
-- `pipeline/selector.py` — Best clip selection logic
-- `pipeline/renderer.py` — Video cutting and rendering
-- `pipeline/effects.py` — Zoom, captions, and visual effects
-- `app.py` — Flask web server + frontend integration
-- `static/` — CSS and JavaScript (Dark UI)
-- `templates/` — HTML templates
+- ** AI Clip Selection**: Automatically identifies the most engaging moments using NLP scoring and keyword matching.
+- ** Animated Captions**: Word-level highlighted captions (similar to 2short.ai or CapCut) burned directly into the video.
+- ** 9:16 Smart Crop**: Automatic center cropping (with optional face detection) for vertical platforms.
+- **  Punch-In Zoom**: Cinematic zoom effects on key moments to keep viewers engaged.
+- ** CPU Optimized**: Uses `faster-whisper` (int8 quantization) for high-speed transcription even without a GPU.
+- **  Web UI**: A polished, dark-themed Flask-based dashboard for easy management.
 
 ---
 
 ## 🛠 Tech Stack
 
-- **Python** 3.10+
-- **Flask** — Web framework
-- **Faster-Whisper** — High-speed transcription
-- **MoviePy** + **FFmpeg** — Video editing
-- **Vanilla JS** + **CSS** — Frontend
-- **OpenCV / NumPy / Pillow** (as needed)
+- **Backend**: Python 3.10+, Flask
+- **AI/ML**: `faster-whisper` (Speech-to-Text), `sentence-transformers` (Optional Scoring)
+- **Video Editing**: `MoviePy v2`, `FFmpeg`, `OpenCV`
+- **Frontend**: Vanilla JS, CSS (Modern Dark UI)
 
 ---
 
-## 📁 Project Structure
+## 🚀 Getting Started
 
+### 1. Prerequisites
+- Python 3.10 or higher
+- [FFmpeg](https://ffmpeg.org/download.html) installed and added to your system PATH.
 
-autoshorts/
-├── app.py                      # Flask web server
-├── pipeline/
-│   ├── transcriber.py          # Faster-Whisper wrapper
-│   ├── scorer.py               # Clip scoring logic
-│   ├── selector.py             # Window selection
-│   ├── renderer.py             # MoviePy + FFmpeg render
-│   └── effects.py              # Zoom, captions, overlays
-├── static/
-│   ├── style.css               # Dark theme UI
-│   └── app.js                  # Frontend logic
-├── templates/
-│   └── index.html              # Main UI template
-├── uploads/                    # Temporary uploaded videos
-├── shorts_output/              # Final exported shorts
-├── requirements.txt            # All dependencies
-├── RESEARCH.md                 # Research notes
-└── README.md                   # This file
-
-
-# Setup Instructions
-Clone the Repository
-
-git clone <your-repo-url>
+### 2. Clone the Repository
+```bash
+git clone https://github.com/Usrafatima/AutoShorts-AI.git
 cd autoshorts
+```
 
-# Create Virtual Environment
+### 3. Set Up a Virtual Environment
+It is highly recommended to use a virtual environment to manage dependencies.
 
+**On Windows:**
+```bash
 python -m venv venv
-Activate it:
+venv\Scripts\activate
+```
 
-Windows: venv\Scripts\activate
-Linux / macOS:Bashsource venv/bin/activate
+**On Linux/macOS:**
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-Install Dependencies
+### 4. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
 
-# pip install -r requirements.txt
-
-Run the Application
-
+### 5. Run the Application
+```bash
 python app.py
+```
+Open your browser and navigate to `http://127.0.0.1:5000`.
+
+---
+
+
+## 📜 License
+This project is licensed under the MIT License. See the LICENSE file for details.
