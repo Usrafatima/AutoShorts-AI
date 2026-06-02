@@ -1,4 +1,4 @@
-# 🎬 AutoShorts AI
+#  AutoShorts AI
 
 **AutoShorts AI** is a fully local, CPU-based video processing system that automatically converts long videos into short viral clips (9:16) with smart captions, zoom effects, and engaging visuals. No paid APIs, no cloud services — everything runs offline on your machine.
 
@@ -48,7 +48,7 @@ Transform long-form videos into multiple ready-to-post vertical shorts for YouTu
 
 ## 📁 Project Structure
 
-```bash
+
 autoshorts/
 ├── app.py                      # Flask web server
 ├── pipeline/
@@ -72,22 +72,21 @@ autoshorts/
 # Setup Instructions
 Clone the Repository
 
-`Bashgit clone <your-repo-url>
+git clone <your-repo-url>
 cd autoshorts
 
-Create Virtual Environment
+# Create Virtual Environment
 
-Bashpython -m venv venv
+python -m venv venv
 Activate it:
 
-Windows:Bashvenv\Scripts\activate
+Windows: venv\Scripts\activate
 Linux / macOS:Bashsource venv/bin/activate
 
 Install Dependencies
 
-Bashpip install -r requirements.txt
+# pip install -r requirements.txt
 
 Run the Application
 
-Bashpython app.py
-```
+python app.py
