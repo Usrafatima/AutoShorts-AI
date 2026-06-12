@@ -57,13 +57,26 @@ pip install -r requirements.txt
 ```
 
 ### 5. Run the Application
+
+You can start the application using either of the following commands:
+
+### Option 1: Run with Python
+
 ```bash
 python app.py
 ```
+
+### Option 2: Run with UV
+
+```bash
+uv run app.py
+```
+
+Use the command that matches your local development setup.
+
 Open your browser and navigate to `http://127.0.0.1:5000`.
 
 ---
-
 
 ## 📜 License
 This project is licensed under the MIT License. See the LICENSE file for details.
