@@ -11,7 +11,5 @@ pysrt==1.1.2
 tqdm==4.67.1
 ffmpeg-python==0.2.0
 yt-dlp==2025.5.22
-
-
 librosa==0.10.2.post1
 sentence-transformers==3.4.1

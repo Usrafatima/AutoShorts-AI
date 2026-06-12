@@ -1,266 +1,199 @@
 :root {
-    --bg-color: #000000;
-    --card-bg: #111111;
-    --text-color: #ffffff;
-    --accent-color: #ffffff;
-    --secondary-text: #888888;
-    --border-color: #333333;
-    --transition: all 0.2s ease;
+    --bg: #ffffff;
+    --text: #000000;
+    --muted: #666666;
+    --border: #eeeeee;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    padding: 2rem;
 }
 
 .container {
-    width: 100%;
-    max-width: 500px;
-    padding: 20px;
-    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-header h1 {
-    font-size: 2rem;
-    font-weight: 700;
+header {
     margin-bottom: 2rem;
-    letter-spacing: -0.05rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
 }
 
-.card {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
+h1 {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+section {
+    margin-bottom: 2rem;
+}
+
+.section-box {
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+}
+
+h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    letter-spacing: 1px;
+}
+
+/* Upload */
+.upload-card {
+    border: 1px solid var(--text);
     padding: 2rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* Upload Section */
-.drop-zone {
-    border: 2px dashed var(--border-color);
-    padding: 3rem 1rem;
-    border-radius: 8px;
+    text-align: center;
     cursor: pointer;
-    transition: var(--transition);
+}
+
+.upload-card p {
+    font-size: 0.9rem;
+}
+
+/* Settings */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 1rem;
 }
 
-.drop-zone:hover, .drop-zone.drag-over {
-    border-color: var(--accent-color);
-    background: #1a1a1a;
-}
-
-.file-name {
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    color: var(--secondary-text);
-}
-
-/* Form Elements */
-.input-group {
-    margin-bottom: 1.5rem;
-    text-align: left;
-}
-
-.input-group label {
-    display: block;
-    font-size: 0.8rem;
-    color: var(--secondary-text);
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
+.setting-item label {
+    font-size: 0.85rem;
 }
 
 select {
-    width: 100%;
-    background: #222;
-    border: 1px solid var(--border-color);
-    color: #fff;
-    padding: 0.8rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    appearance: none;
-    cursor: pointer;
+    padding: 0.3rem;
+    border: 1px solid var(--text);
+    background: white;
+    font-size: 0.85rem;
 }
 
+/* Buttons */
 button {
-    width: 100%;
-    padding: 0.8rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
+    background: var(--text);
+    color: var(--bg);
     border: none;
+    padding: 0.6rem 1.5rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
 }
 
-.primary-btn {
-    background-color: var(--accent-color);
-    color: #000;
+button:hover {
+    background: #333333;
 }
 
-.primary-btn:hover {
-    background-color: #e0e0e0;
+.hidden {
+    display: none;
 }
 
-.secondary-btn {
-    background-color: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-}
-
-.secondary-btn:hover {
-    background-color: #222;
-    border-color: var(--accent-color);
-}
-
-/* Progress Bar */
+/* Progress */
 .progress-bar {
     width: 100%;
-    height: 8px;
-    background: #222;
-    border-radius: 4px;
-    margin-top: 1rem;
-    overflow: hidden;
+    height: 1px;
+    background: var(--border);
+    margin: 1rem 0;
 }
 
 .progress-fill {
     height: 100%;
-    background: var(--accent-color);
+    background: var(--text);
     width: 0%;
-    transition: width 0.3s ease;
+    transition: width 0.4s;
 }
 
-#progress-stage {
-    font-size: 0.9rem;
-    color: var(--secondary-text);
-    margin-bottom: 0.5rem;
+#status-text {
+    font-size: 0.75rem;
+    color: var(--muted);
 }
 
-/* Transcript Section */
-.collapsible-btn {
-    background: #222;
-    color: #fff;
-    padding: 0.5rem;
+/* Transcript */
+details {
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+}
+
+summary {
     font-size: 0.8rem;
-    border: 1px solid var(--border-color);
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
 }
 
-.transcript-box {
+.transcript-content {
     margin-top: 1rem;
-    padding: 1rem;
-    background: #000;
-    border: 1px solid var(--border-color);
-    text-align: left;
-    max-height: 200px;
-    overflow-y: auto;
     font-size: 0.85rem;
+    max-height: 150px;
+    overflow-y: auto;
 }
 
-.transcript-box p {
+.transcript-content p {
     margin-bottom: 0.5rem;
 }
 
-.transcript-box strong {
-    color: var(--secondary-text);
+.transcript-content span {
+    color: var(--muted);
     margin-right: 0.5rem;
 }
 
-/* Results Section */
-.results-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin: 1.5rem 0;
-}
-
-.result-card {
+/* Results */
+.short-card {
+    border: 1px solid var(--border);
+    padding: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
-    background: #1a1a1a;
-    border: 1px solid var(--border-color);
-    padding: 1rem;
-    border-radius: 8px;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
 .thumbnail-placeholder {
-    width: 80px;
-    height: 80px;
-    background: #333;
+    width: 60px;
+    height: 100px;
+    background: #f0f0f0;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.6rem;
+    color: var(--muted);
+}
+
+.short-info {
+    flex: 1;
+}
+
+.short-info h4 {
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+}
+
+.short-info p {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.btn-small {
+    background: white;
+    color: black;
+    border: 1px solid black;
+    padding: 0.3rem 0.8rem;
+    text-decoration: none;
     font-size: 0.7rem;
-    color: var(--secondary-text);
-    flex-shrink: 0;
-}
-
-.result-info {
-    flex-grow: 1;
-    text-align: left;
-}
-
-.result-info h3 {
-    font-size: 0.9rem;
-    margin-bottom: 0.2rem;
-}
-
-.result-info p {
-    font-size: 0.8rem;
-    color: var(--secondary-text);
-}
-
-.download-icon-btn {
-    background: var(--accent-color);
-    color: #000;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 1.2rem;
-    border: none;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 480px) {
-    .container {
-        padding: 15px;
-    }
-    
-    header h1 {
-        font-size: 1.5rem;
-    }
-
-    .result-card {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .result-info {
-        text-align: center;
-    }
-
-    .thumbnail-placeholder {
-        width: 100%;
-        height: 120px;
-    }
+    font-weight: 600;
+    text-transform: uppercase;
 }

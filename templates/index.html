@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AutoShorts AI</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
@@ -13,86 +13,83 @@
         </header>
 
         <main>
-            <!-- Upload Section -->
-            <section id="upload-section" class="card">
-                <div id="drop-zone" class="drop-zone">
-                    <p>Drag & Drop MP4 Video</p>
-                    <input type="file" id="file-input" accept="video/mp4" hidden>
-                </div>
-                <button id="browse-btn" class="secondary-btn">Browse Files</button>
-                <p id="file-name" class="file-name"></p>
-            </section>
-
-            <!-- Settings Section -->
-            <section id="config-section" class="card hidden">
-                <div class="input-group">
-                    <label for="num-shorts">Number of Shorts</label>
-                    <select id="num-shorts">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3" selected>3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label for="clip-duration">Clip Duration (seconds)</label>
-                    <select id="clip-duration">
-                        <option value="15">15s</option>
-                        <option value="30" selected>30s</option>
-                        <option value="45">45s</option>
-                        <option value="60">60s</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label for="whisper-model">Whisper Model</label>
-                    <select id="whisper-model">
-                        <option value="tiny">Tiny</option>
-                        <option value="base" selected>Base</option>
-                        <option value="small">Small</option>
-                    </select>
-                </div>
-
-                <button id="generate-btn" class="primary-btn">Generate Shorts</button>
-            </section>
-
-            <!-- Progress Section -->
-            <section id="progress-section" class="card hidden">
-                <p id="progress-stage">Initializing...</p>
-                <div class="progress-bar">
-                    <div id="progress-fill" class="progress-fill"></div>
+            <!-- 1. Upload Section -->
+            <section id="upload-section">
+                <div class="upload-card" id="drop-zone">
+                    <input type="file" id="file-input" hidden accept="video/*">
+                    <p id="upload-prompt">Select video to process</p>
+                    <p id="selected-file-name" class="hidden" style="font-weight: 600; margin-bottom: 1rem;"></p>
+                    <button id="browse-btn">Choose File</button>
                 </div>
             </section>
 
-            <!-- Transcript Section -->
-            <section id="transcript-section" class="card hidden">
-                <button id="toggle-transcript" class="collapsible-btn">Show Transcript</button>
-                <div id="transcript-content" class="collapsible-content hidden">
-                    <div class="transcript-box">
-                        <p><strong>[00:00]</strong> This is a dummy transcript timestamp.</p>
-                        <p><strong>[00:05]</strong> The backend will provide real text later.</p>
-                        <p><strong>[00:10]</strong> This panel is collapsible for better UI flow.</p>
+            <!-- 2. Settings Section -->
+            <section id="settings-section" class="hidden">
+                <div class="section-box">
+                    <h3>Settings</h3>
+                    <div class="setting-item">
+                        <label>Number of Shorts</label>
+                        <select id="shorts-count">
+                            <option value="1">1</option>
+                            <option value="3" selected>3</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Clip Duration (sec)</label>
+                        <select id="clip-duration">
+                            <option value="15">15</option>
+                            <option value="30" selected>30</option>
+                            <option value="60">60</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label>Whisper Model</label>
+                        <select id="whisper-model">
+                            <option value="tiny">Tiny</option>
+                            <option value="base" selected>Base</option>
+                        </select>
                     </div>
                 </div>
             </section>
 
-            <!-- Results Section -->
-            <section id="results-section" class="card hidden">
-                <h2>Shorts Generated</h2>
-                <div id="results-grid" class="results-grid">
-                    <!-- Result cards will be injected here -->
+            <!-- 3. Generate Section -->
+            <section id="generate-section" class="hidden" style="text-align: center; margin-top: 2rem;">
+                <button id="generate-btn" style="width: 100%; padding: 1rem;">Generate Shorts</button>
+            </section>
+
+            <!-- 4. Progress Section -->
+            <section id="progress-section" class="hidden">
+                <div class="section-box">
+                    <p id="status-text">Ready...</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
                 </div>
-                <button id="reset-btn" class="secondary-btn">Start Over</button>
+            </section>
+
+            <!-- 5. Transcript Section -->
+            <section id="transcript-section" class="hidden">
+                <details>
+                    <summary>View Transcript</summary>
+                    <div class="transcript-content">
+                        <p><span>[00:00]</span> Initializing local processing engine...</p>
+                        <p><span>[00:04]</span> Extracting audio from uploaded source.</p>
+                        <p><span>[00:08]</span> Running Whisper transcription (Base model).</p>
+                    </div>
+                </details>
+            </section>
+
+            <!-- 6. Results Section -->
+            <section id="results-section" class="hidden">
+                <div id="shorts-grid" class="shorts-grid"></div>
+                <div style="margin-top: 2rem; border-top: 1px solid #eeeeee; padding-top: 1rem;">
+                    <button id="new-job-btn">Start Over</button>
+                </div>
             </section>
         </main>
     </div>
-    <script src="/static/app.js"></script>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>

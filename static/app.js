@@ -2,160 +2,116 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const browseBtn = document.getElementById('browse-btn');
-    const fileNameDisplay = document.getElementById('file-name');
+    const uploadPrompt = document.getElementById('upload-prompt');
+    const selectedFileName = document.getElementById('selected-file-name');
     
-    const uploadSection = document.getElementById('upload-section');
-    const configSection = document.getElementById('config-section');
+    const settingsSection = document.getElementById('settings-section');
+    const generateSection = document.getElementById('generate-section');
+    const generateBtn = document.getElementById('generate-btn');
+    
     const progressSection = document.getElementById('progress-section');
+    const progressFill = document.getElementById('progress-fill');
+    const statusText = document.getElementById('status-text');
+    
     const transcriptSection = document.getElementById('transcript-section');
     const resultsSection = document.getElementById('results-section');
-    
-    const generateBtn = document.getElementById('generate-btn');
-    const progressFill = document.getElementById('progress-fill');
-    const progressStage = document.getElementById('progress-stage');
-    const resultsGrid = document.getElementById('results-grid');
-    const resetBtn = document.getElementById('reset-btn');
-    
-    const toggleTranscriptBtn = document.getElementById('toggle-transcript');
-    const transcriptContent = document.getElementById('transcript-content');
+    const shortsGrid = document.getElementById('shorts-grid');
+    const newJobBtn = document.getElementById('new-job-btn');
 
-    const numShortsSelect = document.getElementById('num-shorts');
-    const durationSelect = document.getElementById('clip-duration');
+    let currentJobId = null;
 
-    let selectedFile = null;
-
-    // --- Drag and Drop Logic ---
-
+    // 1. Selection
+    browseBtn.addEventListener('click', (e) => { e.stopPropagation(); fileInput.click(); });
     dropZone.addEventListener('click', () => fileInput.click());
-    browseBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        fileInput.click();
-    });
 
     fileInput.addEventListener('change', (e) => {
-        handleFiles(e.target.files);
+        if (e.target.files.length > 0) showFileReady(e.target.files[0].name);
     });
 
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            dropZone.classList.add('drag-over');
-        }, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => {
-            e.preventDefault();
-            dropZone.classList.remove('drag-over');
-        }, false);
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-        const dt = e.dataTransfer;
-        handleFiles(dt.files);
-    });
-
-    function handleFiles(files) {
-        if (files.length > 0) {
-            const file = files[0];
-            if (file.type === 'video/mp4') {
-                selectedFile = file;
-                fileNameDisplay.textContent = `Selected: ${file.name}`;
-                configSection.classList.remove('hidden');
-            } else {
-                alert('Please upload an MP4 video.');
-            }
-        }
+    function showFileReady(name) {
+        uploadPrompt.classList.add('hidden');
+        selectedFileName.textContent = name;
+        selectedFileName.classList.remove('hidden');
+        settingsSection.classList.remove('hidden');
+        generateSection.classList.remove('hidden');
     }
 
-    // --- Transcript Toggle ---
+    // 2. Generate (Real Connection)
+    generateBtn.addEventListener('click', async () => {
+        const file = fileInput.files[0];
+        if (!file) return;
 
-    toggleTranscriptBtn.addEventListener('click', () => {
-        const isHidden = transcriptContent.classList.toggle('hidden');
-        toggleTranscriptBtn.textContent = isHidden ? 'Show Transcript' : 'Hide Transcript';
-    });
-
-    // --- Generation Logic ---
-
-    generateBtn.addEventListener('click', () => {
-        uploadSection.classList.add('hidden');
-        configSection.classList.add('hidden');
+        settingsSection.classList.add('hidden');
+        generateSection.classList.add('hidden');
         progressSection.classList.remove('hidden');
+        
+        statusText.textContent = 'Uploading video...';
+        progressFill.style.width = '10%';
 
-        simulateProcessing();
+        const formData = new FormData();
+        formData.append('video', file);
+        formData.append('num_shorts', document.getElementById('shorts-count').value);
+        formData.append('model_size', document.getElementById('whisper-model').value);
+
+        try {
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            
+            if (data.job_id) {
+                currentJobId = data.job_id;
+                startPolling(currentJobId);
+            } else {
+                statusText.textContent = 'Upload failed: ' + (data.error || 'Unknown error');
+            }
+        } catch (error) {
+            statusText.textContent = 'Network error during upload.';
+            console.error(error);
+        }
     });
 
-    const stages = [
-        { progress: 10, text: "Extracting audio..." },
-        { progress: 30, text: "Transcribing with Whisper..." },
-        { progress: 50, text: "Analyzing highlights..." },
-        { progress: 70, text: "Generating clips..." },
-        { progress: 90, text: "Applying effects..." },
-        { progress: 100, text: "Finalizing..." }
-    ];
+    function startPolling(jobId) {
+        const interval = setInterval(async () => {
+            try {
+                const response = await fetch(`/status/${jobId}`);
+                const data = await response.json();
 
-    function simulateProcessing() {
-        let currentStageIndex = 0;
-        
-        const interval = setInterval(() => {
-            if (currentStageIndex < stages.length) {
-                const stage = stages[currentStageIndex];
-                progressStage.textContent = stage.text;
-                progressFill.style.width = `${stage.progress}%`;
-                
-                // Show transcript section once transcription stage starts
-                if (stage.progress >= 30) {
+                if (data.status === 'processing') {
+                    statusText.textContent = 'AI is processing your video... (Transcribing & Scoring)';
+                    progressFill.style.width = '50%';
                     transcriptSection.classList.remove('hidden');
+                } else if (data.status === 'completed') {
+                    clearInterval(interval);
+                    progressFill.style.width = '100%';
+                    statusText.textContent = 'Success! Shorts generated.';
+                    setTimeout(() => showResults(data.shorts), 1000);
+                } else if (data.status === 'failed') {
+                    clearInterval(interval);
+                    statusText.textContent = 'Error: ' + data.error;
                 }
-
-                currentStageIndex++;
-            } else {
-                clearInterval(interval);
-                setTimeout(showResults, 800);
+            } catch (error) {
+                console.error('Polling error:', error);
             }
-        }, 1200);
+        }, 3000);
     }
 
-    function showResults() {
+    function showResults(shorts) {
         progressSection.classList.add('hidden');
         resultsSection.classList.remove('hidden');
-
-        const numShorts = parseInt(numShortsSelect.value);
-        const duration = durationSelect.value;
-        resultsGrid.innerHTML = '';
-
-        for (let i = 1; i <= numShorts; i++) {
-            const card = document.createElement('div');
-            card.className = 'result-card';
-            
-            card.innerHTML = `
-                <div class="thumbnail-placeholder">Thumbnail</div>
-                <div class="result-info">
-                    <h3>Short #${i}</h3>
-                    <p>Duration: ${duration}s</p>
+        
+        shortsGrid.innerHTML = shorts.map((filename, index) => `
+            <div class="short-card">
+                <div class="thumbnail-placeholder">VIDEO</div>
+                <div class="short-info">
+                    <h4>Short #${index + 1}</h4>
+                    <p>${filename}</p>
                 </div>
-                <button class="download-icon-btn" title="Download">↓</button>
-            `;
-            
-            resultsGrid.appendChild(card);
-        }
+                <a href="/download/${filename}" class="btn-small" target="_blank">Download</a>
+            </div>
+        `).join('');
     }
 
-    // --- Reset Logic ---
-
-    resetBtn.addEventListener('click', () => {
-        selectedFile = null;
-        fileInput.value = '';
-        fileNameDisplay.textContent = '';
-        progressFill.style.width = '0%';
-        progressStage.textContent = 'Initializing...';
-        
-        resultsSection.classList.add('hidden');
-        transcriptSection.classList.add('hidden');
-        transcriptContent.classList.add('hidden');
-        toggleTranscriptBtn.textContent = 'Show Transcript';
-        
-        uploadSection.classList.remove('hidden');
-        configSection.classList.add('hidden');
-    });
+    newJobBtn.addEventListener('click', () => location.reload());
 });
